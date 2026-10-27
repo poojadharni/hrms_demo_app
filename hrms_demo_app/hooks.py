@@ -58,6 +58,9 @@ app_license = "mit"
 # application home page (will override Website Settings)
 home_page = "index"
 
+# website user home page
+get_website_user_home_page = "hrms_demo_app.website.get_website_user_home_page"
+
 # website user home page (by Role)
 # role_home_page = {
 # 	"Role": "home_page"
@@ -76,9 +79,9 @@ home_page = "index"
 # ----------
 
 # add methods and filters to jinja environment
-jinja = {
-	"methods": "hrms_demo_app.utils.get_hrms_demo_users",
-}
+# jinja = {
+# 	"methods": "hrms_demo_app.utils.get_hrms_demo_users",
+# }
 
 # Installation
 # ------------

@@ -159,7 +159,7 @@ main.container{
    CARDS
    ========================= */
 
-.login-page .page-card.hrms-card{
+.login-page .page-card.edu-card{
     background:#fff;
     border:1px solid var(--qb-border);
     border-radius:16px;
@@ -171,7 +171,7 @@ main.container{
     min-height:auto;
 }
 
-.login-page .for-login .page-card.hrms-card{
+.login-page .for-login .page-card.edu-card{
     padding:22px;
     min-height:auto;
     border:1px solid var(--qb-border);
@@ -336,82 +336,118 @@ main.container{
 }
 
 /* =========================
-   DEMO ACCOUNT SELECTORS
+   QUICK LOGIN CARD
    ========================= */
 
-.demo-account-section{
-    margin-top:18px;
-    padding:16px;
-    border:1px solid var(--qb-border);
-    border-radius:12px;
-    background:linear-gradient(135deg,#FBF9FD 0%,#fff 100%);
+.login-page .quick-card{
+    padding:16px 18px;
 }
 
 .quick-card-head{
     display:flex;
     flex-direction:column;
-    gap:3px;
+    align-items:center;
+    gap:2px;
     margin-bottom:12px;
+    text-align:center;
 }
 
 .quick-card-title{
-    color:#301044;
-    font-size:14px;
+    color:var(--qb-purple);
+    font-size:11px;
     font-weight:700;
-    line-height:1.35;
+    letter-spacing:.9px;
+    text-transform:uppercase;
 }
 
 .quick-card-sub{
     color:var(--qb-muted);
     font-size:12px;
-    line-height:1.4;
 }
 
-.demo-account-feedback{
-    min-height:18px;
-    margin:10px 0 0;
-    color:#9b1c1c;
-    font-size:12px;
-    line-height:1.5;
-    text-align:center;
-}
-
-.demo-account-buttons{
+.quick-buttons{
     display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(3,1fr);
     gap:8px;
 }
 
-.demo-account-btn{
-    min-width:0;
-    min-height:44px;
+.quick-btn{
+    min-height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:7px;
     border:1px solid var(--qb-border);
-    border-radius:10px;
-    background:rgba(255,255,255,.9);
+    border-radius:9px;
+    background:#fff;
     color:#301044;
     font-size:13px;
-    font-weight:650;
+    font-weight:600;
     cursor:pointer;
-    transition:transform .2s,background .2s,border-color .2s,box-shadow .2s;
+    transition:background .2s,border-color .2s,transform .2s,box-shadow .2s;
 }
 
-.demo-account-btn:hover{
+.quick-btn .dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    flex:none;
+}
+
+.quick-btn-employee .dot{
+    background:var(--qb-purple);
+}
+
+.quick-btn-hr .dot{
+    background:var(--qb-magenta);
+}
+
+.quick-btn-admin .dot{
+    background:#7b2d87;
+}
+
+.quick-btn:hover{
+    background:#FBF8FC;
+    border-color:#D8CBE0;
     transform:translateY(-1px);
-    background:#fff;
-    border-color:#CFC0DA;
-    box-shadow:0 5px 14px rgba(50,18,71,.10);
+    box-shadow:0 6px 14px rgba(50,18,71,.08);
 }
 
-.demo-account-btn[disabled]{
+.quick-btn:focus-visible{
+    outline:3px solid rgba(184,50,143,.28);
+    outline-offset:1px;
+}
+
+.quick-btn[disabled]{
+    opacity:.6;
     cursor:default;
-    opacity:.65;
     transform:none;
     box-shadow:none;
 }
 
-.demo-account-btn:focus-visible{
-    outline:3px solid rgba(184,50,143,.28);
-    outline-offset:1px;
+.quick-btn.is-loading{
+    pointer-events:none;
+}
+
+.quick-btn.is-loading .dot{
+    width:13px;
+    height:13px;
+    background:transparent;
+    border:2px solid rgba(48,16,68,.18);
+    border-top-color:#301044;
+    animation:qb-spin .7s linear infinite;
+}
+
+@keyframes qb-spin{
+    to{ transform:rotate(360deg); }
+}
+
+.quick-note{
+    margin:10px 0 0;
+    text-align:center;
+    color:#9A8FA2;
+    font-size:10px;
+    letter-spacing:.3px;
 }
 
 /* =========================
@@ -439,8 +475,8 @@ main.container{
         align-items:center;
     }
 
-    .login-page .for-login .page-card.hrms-card,
-    .login-page .page-card.hrms-card{
+    .login-page .for-login .page-card.edu-card,
+    .login-page .page-card.edu-card{
         padding:18px 16px;
         border-radius:14px;
         min-height:auto;
@@ -460,6 +496,9 @@ main.container{
         font-size:20px;
     }
 
+    .quick-buttons{
+        grid-template-columns:1fr;
+    }
 }
 
 @media(min-width:769px) and (max-height:740px){
@@ -495,7 +534,7 @@ main.container{
         font-size:12px;
     }
 
-    .login-page .for-login .page-card.hrms-card{
+    .login-page .for-login .page-card.edu-card{
         padding:18px;
     }
 
@@ -515,6 +554,17 @@ main.container{
         height:42px;
     }
 
+    .login-page .quick-card{
+        padding:13px 16px;
+    }
+
+    .quick-btn{
+        min-height:38px;
+    }
+
+    .quick-note{
+        margin-top:7px;
+    }
 }
 </style>
 
@@ -526,8 +576,7 @@ main.container{
 {# ===== PAGE BRANDING (read live from Website Settings) ===== #}
 {% set company_name = frappe.db.get_single_value("Website Settings", "app_name") %}
 {% set company_logo = frappe.db.get_single_value("Website Settings", "app_logo") %}
-{% set welcome_message = "Welcome! Sign in to access your HRMS workspace." %}
-{% set demo_users = get_hrms_demo_users() %}
+{% set welcome_message = "Welcome! Sign in to access your education portal." %}
 
 <div class="login-page">
 
@@ -554,10 +603,8 @@ main.container{
                     {%- else -%}
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" width="26" height="26" aria-hidden="true">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="10" cy="7" r="4"></circle>
-                        <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        <path d="M22 10 12 5 2 10l10 5 10-5z"></path>
+                        <path d="M6 12.5V17c0 1 2.7 2.5 6 2.5s6-1.5 6-2.5v-4.5"></path>
                     </svg>
                     {%- endif -%}
                 </span>
@@ -571,7 +618,7 @@ main.container{
 
         <section class="for-login">
 
-            <div class="login-content page-card hrms-card">
+            <div class="login-content page-card edu-card">
 
                 <form class="form-signin form-login" role="form" novalidate>
 
@@ -656,27 +703,37 @@ main.container{
 
         </section>
 
-        <section class="demo-account-section" aria-label="{{ _('Demo accounts') }}">
+        <div class="page-card edu-card quick-card">
+
             <div class="quick-card-head">
                 <span class="quick-card-title">{{ _("Demo Quick Login") }}</span>
                 <span class="quick-card-sub">{{ _("Select a role to sign in instantly") }}</span>
             </div>
-            <div class="demo-account-buttons">
-                <button type="button" class="demo-account-btn" data-demo-role="admin"
-                    data-username="{{ demo_users.get('admin', '') | e }}">
-                    {{ _("Admin") }}
+
+            <div class="quick-buttons" role="group" aria-label="{{ _('Demo roles') }}">
+
+                <button type="button" class="quick-btn quick-btn-admin" data-role="admin">
+                    <span class="dot" aria-hidden="true"></span>
+                    <span>{{ _("Admin") }}</span>
                 </button>
-                <button type="button" class="demo-account-btn" data-demo-role="employee"
-                    data-username="{{ demo_users.get('employee', '') | e }}">
-                    {{ _("Employee") }}
+
+                <button type="button" class="quick-btn quick-btn-hr" data-role="hr">
+                    <span class="dot" aria-hidden="true"></span>
+                    <span>{{ _("HR") }}</span>
                 </button>
-                <button type="button" class="demo-account-btn" data-demo-role="hr"
-                    data-username="{{ demo_users.get('hr', '') | e }}">
-                    {{ _("HR") }}
+
+                <button type="button" class="quick-btn quick-btn-employee" data-role="employee">
+                    <span class="dot" aria-hidden="true"></span>
+                    <span>{{ _("Employee") }}</span>
                 </button>
+
             </div>
-            <p class="demo-account-feedback" role="status" aria-live="polite"></p>
-        </section>
+
+            <p class="quick-note">
+                {{ _("Demo access is intended for evaluation environments only.") }}
+            </p>
+
+        </div>
 
     </div>
 
@@ -695,27 +752,92 @@ main.container{
 (function () {
     "use strict";
 
-    var defaultLoginSuccessHandler = login.login_handlers[200];
-    login.login_handlers[200] = function (data) {
-        if (data && (data.message === "Logged In" || data.message === "No App")) {
-            login.set_status({{ _("Success") | tojson }}, "green");
-            document.body.innerHTML = `{% include "templates/includes/splash_screen.html" %}`;
-            var redirectTo = frappe.utils.sanitise_redirect(
-                frappe.utils.get_url_arg("redirect-to") || data.home_page
-            );
-            window.location.replace(redirectTo || "/desk");
-            return;
-        }
-
-        return defaultLoginSuccessHandler(data);
+    var DEMO_ACCOUNTS = {
+        admin: { usr: "demoadmin@gmail.com", pwd: "demoadmin@123" },
+        hr: { usr: "demohr@gmail.com", pwd: "demohr@123" },
+        employee: { usr: "demoemployee@gmail.com", pwd: "demoemployee@123" }
     };
+
+    // Send configured demo accounts to the HRMS desk by default.
+    var DEMO_DESTINATION = "/desk";
+    var PORTAL_PREFIXES = ["/desk"];
+
+    // Demo role of the sign-in attempt in flight: set from the quick-login
+    // button (data-role) or from the username typed into the form, read only
+    // after Frappe reports a successful login, cleared once it is used.
+    var pendingRole = null;
 
     var busy = false;
     var safetyTimer = null;
 
+    function roleForUsername(usr) {
+        usr = String(usr || "").toLowerCase();
+        for (var role in DEMO_ACCOUNTS) {
+            if (DEMO_ACCOUNTS[role].usr.toLowerCase() === usr) {
+                return role;
+            }
+        }
+        return null;
+    }
+
+    function requestedRedirect() {
+        var raw = "";
+        try {
+            raw = frappe.utils.get_url_arg("redirect-to") || "";
+            if (raw && frappe.utils.sanitise_redirect) {
+                raw = frappe.utils.sanitise_redirect(raw);
+            }
+        } catch (err) {
+            return "";
+        }
+        return raw;
+    }
+
+    function isPortalPath(path) {
+        path = String(path || "");
+        for (var i = 0; i < PORTAL_PREFIXES.length; i++) {
+            var prefix = PORTAL_PREFIXES[i];
+            if (path === prefix ||
+                path.indexOf(prefix + "/") === 0 ||
+                path.indexOf(prefix + "?") === 0 ||
+                path.indexOf(prefix + "#") === 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Keep stock redirects for other users, while routing demo accounts to
+    // the desk unless a different safe destination was explicitly requested.
+    var stockLogin200 = login.login_handlers[200];
+
+    login.login_handlers[200] = function (data) {
+        var role = pendingRole;
+
+        if (data && data.message === "Logged In") {
+            pendingRole = null;
+
+            if (role && DEMO_ACCOUNTS[role]) {
+                var requested = requestedRedirect();
+                var destination = requested &&
+                    !isPortalPath(requested) &&
+                    !/^\/?login\/?$/.test(String(requested).replace(/^\//, ""))
+                    ? requested
+                    : DEMO_DESTINATION;
+
+                login.set_status({{ _("Success") | tojson }}, "green");
+                document.body.innerHTML = `{% include "templates/includes/splash_screen.html" %}`;
+                window.location.href = destination;
+                return;
+            }
+        }
+
+        return stockLogin200(data);
+    };
+
     function setBusy(state) {
         busy = state;
-        var buttons = document.querySelectorAll(".btn-login, .demo-account-btn");
+        var buttons = document.querySelectorAll(".quick-btn, .btn-login");
         for (var i = 0; i < buttons.length; i++) {
             buttons[i].disabled = state;
             if (!state) {
@@ -738,9 +860,19 @@ main.container{
         }, 20000);
     }
 
-    $("form.form-login").on("submit.hrms_guard", function (event) {
+    function clearBusy() {
+        if (safetyTimer) {
+            clearTimeout(safetyTimer);
+            safetyTimer = null;
+        }
+        setBusy(false);
+    }
+
+    $("form.form-login").on("submit.edu_guard", function (event) {
         var usr = ($("#login_email").val() || "").trim();
         var pwd = $("#login_password").val() || "";
+
+        pendingRole = roleForUsername(usr);
 
         if (!usr || !pwd) {
             return;
@@ -755,77 +887,81 @@ main.container{
         markBusy();
     });
 
-    var demoAccountButtons = document.querySelectorAll(".demo-account-btn");
-    var demoAccountFeedback = document.querySelector(".demo-account-feedback");
+    try {
+        if (document.body.getAttribute("frappe-session-status") === "logged-in") {
+            var params = new URLSearchParams(window.location.search);
+            var redirect = params.get("redirect-to");
 
-    function getDemoLoginError(xhr) {
-        var response = xhr && xhr.responseJSON;
-        var fallback = "Demo sign-in failed. Check the account credentials and permissions, then try again.";
+            if (redirect && frappe.utils && frappe.utils.sanitise_redirect) {
+                redirect = frappe.utils.sanitise_redirect(redirect);
+            }
 
-        if (!response) {
-            return fallback;
-        }
+            if (!redirect && frappe.boot && frappe.boot.apps_data) {
+                redirect = frappe.boot.apps_data.default_path || "";
+            }
 
-        if (response._error_message) {
-            return response._error_message;
-        }
-
-        if (response._server_messages) {
-            try {
-                var messages = JSON.parse(response._server_messages);
-                var firstMessage = messages[0];
-                if (typeof firstMessage === "string") {
-                    var parsedMessage = JSON.parse(firstMessage);
-                    return parsedMessage.message || fallback;
-                }
-                if (firstMessage && firstMessage.message) {
-                    return firstMessage.message;
-                }
-            } catch (error) {
-                return fallback;
+            if (redirect && !/^\/?login\/?$/.test(String(redirect).replace(/^\//, ""))) {
+                window.location.replace(redirect);
+                return;
             }
         }
-
-        return fallback;
+    } catch (err) {
+        clearBusy();
     }
 
-    for (var i = 0; i < demoAccountButtons.length; i++) {
-        demoAccountButtons[i].addEventListener("click", function () {
-            var role = this.getAttribute("data-demo-role");
-            var username = (this.getAttribute("data-username") || "").trim();
+    function quickLogin(role, btn) {
+        if (busy) {
+            return;
+        }
 
-            if (!username) {
-                demoAccountFeedback.textContent =
-                    "The " + role + " demo account is not configured in hrms.local site_config.json.";
-                return;
-            }
+        var account = DEMO_ACCOUNTS[role];
 
-            if (role === "employee" && username.toLowerCase() === "administrator") {
-                demoAccountFeedback.textContent =
-                    "Configure a separate Employee account; Administrator has full site access.";
-                return;
+        if (!account || !account.usr || !account.pwd) {
+            if (window.login && login.show_error_banner) {
+                login.show_error_banner(
+                    "The " + role + " demo account is not configured. " +
+                    "Add its username and password to the DEMO_ACCOUNTS " +
+                    "configuration in this login page."
+                );
             }
+            return;
+        }
 
-            if (busy) {
-                return;
-            }
+        // Loading state on the clicked button; markBusy disables every
+        // auth button so a second submission cannot start.
+        if (btn) {
+            btn.classList.add("is-loading");
+            btn.setAttribute("aria-busy", "true");
+        }
+        markBusy();
 
-            demoAccountFeedback.textContent = "Signing in to the local demo…";
-            markBusy();
-            try {
-                login.call(
-                    { role: role },
-                    null,
-                    "/api/method/hrms_demo_app.utils.quick_demo_login"
-                ).fail(function (xhr) {
-                    setBusy(false);
-                    demoAccountFeedback.textContent = getDemoLoginError(xhr);
-                });
-            } catch (error) {
-                setBusy(false);
-                demoAccountFeedback.textContent = "Could not start demo sign-in. Please use the standard login form.";
+        // Authenticate directly through Frappe's standard login handler
+        // (same endpoint, CSRF handling and session flow as the Sign in
+        // form). The visible username/password fields are never filled.
+        try {
+            pendingRole = role;
+            login.call(
+                { cmd: "login", usr: account.usr, pwd: account.pwd },
+                null,
+                "/api/method/login"
+            );
+        } catch (err) {
+            clearBusy();
+            if (window.login && login.show_error_banner) {
+                login.show_error_banner(
+                    "Could not start the sign-in request. Please try again."
+                );
             }
-        });
+        }
+    }
+
+    var quickButtons = document.querySelectorAll(".quick-btn");
+    for (var i = 0; i < quickButtons.length; i++) {
+        (function (btn) {
+            btn.addEventListener("click", function () {
+                quickLogin(btn.getAttribute("data-role"), btn);
+            });
+        })(quickButtons[i]);
     }
 
     $(".toggle-password").on("click", function () {
