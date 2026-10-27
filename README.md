@@ -1,6 +1,39 @@
-### hrms_demo_app
+### HRMS Demo Portal
 
-hrms app
+A lightweight HRMS portal for employee records and everyday people operations.
+
+For local development, Admin, Employee and HR buttons on the login page can sign
+in using credentials kept in `sites/<site>/site_config.json`:
+
+```json
+{
+  "website_context": {
+    "hrms_demo_users": {
+      "admin": {
+        "username": "admin@example.test",
+        "password": "replace-with-a-local-demo-password"
+      },
+      "employee": {
+        "username": "employee@example.test",
+        "password": "replace-with-a-local-demo-password"
+      },
+      "hr": {
+        "username": "hr@example.test",
+        "password": "replace-with-a-local-demo-password"
+      }
+    }
+  }
+}
+```
+
+The quick-login endpoint is restricted to developer mode, local requests and
+same-origin requests. It checks the supplied password against Frappe and
+refuses accounts with two-factor authentication. Do not enable this on a
+network-accessible or production site. Keep `site_config.json` private and out
+of source control.
+Use a dedicated Employee account; do not use `Administrator` for the Employee
+role. Change any credentials shared in chat.
+The HR account must have the Frappe `HR Manager` role and must not be an administrator.
 
 ### Installation
 

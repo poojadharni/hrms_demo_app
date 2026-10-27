@@ -1,7 +1,7 @@
 app_name = "hrms_demo_app"
-app_title = "hrms_demo_app"
+app_title = "HRMS Portal"
 app_publisher = "pooja"
-app_description = "hrms app"
+app_description = "Human resource management portal for employee and people operations."
 app_email = "poojarajuhe@gmail.com"
 app_license = "mit"
 
@@ -20,7 +20,6 @@ app_license = "mit"
 # 		"has_permission": "hrms_demo_app.api.permission.has_app_permission"
 # 	}
 # ]
-
 # Includes in <head>
 # ------------------
 
@@ -57,7 +56,7 @@ app_license = "mit"
 # ----------
 
 # application home page (will override Website Settings)
-# home_page = "login"
+home_page = "index"
 
 # website user home page (by Role)
 # role_home_page = {
@@ -77,10 +76,9 @@ app_license = "mit"
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "hrms_demo_app.utils.jinja_methods",
-# 	"filters": "hrms_demo_app.utils.jinja_filters"
-# }
+jinja = {
+	"methods": "hrms_demo_app.utils.get_hrms_demo_users",
+}
 
 # Installation
 # ------------
@@ -255,4 +253,3 @@ app_license = "mit"
 # ------------
 # List of apps whose translatable strings should be excluded from this app's translations.
 # ignore_translatable_strings_from = []
-

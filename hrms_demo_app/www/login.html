@@ -1,0 +1,848 @@
+{% extends "templates/web.html" %}
+
+{% block navbar %}
+{% if show_language_picker %}
+{{ super() }}
+{% endif %}
+{% endblock %}
+
+{% block head_include %}
+{{ include_style('login.bundle.css') }}
+
+<style>
+:root{
+    --qb-purple:#453D89;
+    --qb-purple-dark:#3B155F;
+    --qb-magenta:#B8328F;
+    --qb-pink:#C8499A;
+    --qb-text:#292132;
+    --qb-muted:#75657D;
+    --qb-border:#E7DDF0;
+    --qb-bg:#f7f4f8;
+}
+
+*,
+*::before,
+*::after{
+    box-sizing:border-box;
+}
+
+html,
+body{
+    min-height:100%;
+    margin:0;
+}
+
+body{
+    background:var(--qb-bg);
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    color:var(--qb-text);
+}
+
+.navbar,
+.web-footer,
+.page-breadcrumbs{
+    display:none!important;
+}
+
+main.container{
+    max-width:none!important;
+    width:100%!important;
+    padding:0!important;
+    margin:0!important;
+}
+
+.page-content-wrapper,
+.page_content{
+    max-width:none!important;
+    width:100%!important;
+    padding:0!important;
+    margin:0!important;
+}
+
+.login-error-banner.hidden,
+.login-success-banner.hidden{
+    display:none!important;
+}
+
+/* =========================
+   LAYOUT
+   ========================= */
+
+.login-page{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+    background:
+        radial-gradient(circle at 8% 15%,rgba(216,75,157,.10),transparent 28%),
+        radial-gradient(circle at 92% 85%,rgba(84,32,111,.10),transparent 30%),
+        var(--qb-bg);
+}
+
+.login-stack{
+    width:100%;
+    max-width:410px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+/* =========================
+   BRANDING
+   ========================= */
+
+.brand-block{
+    text-align:center;
+}
+
+.brand-block .brand-logo{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    padding:10px 22px;
+    border-radius:15px;
+    box-shadow:0 12px 30px rgba(20,5,30,.12);
+    margin-bottom:14px;
+}
+
+.brand-block .brand-logo img{
+    display:block;
+    height:56px;
+    width:auto;
+    max-width:100%;
+    object-fit:contain;
+}
+
+.brand-block .brand-logo .brand-logo-fallback{
+    display:none;
+    min-width:56px;
+    height:56px;
+    padding:0 14px;
+    align-items:center;
+    justify-content:center;
+    border-radius:12px;
+    background:linear-gradient(135deg,var(--qb-purple),var(--qb-magenta));
+    color:#fff;
+    font-size:26px;
+    font-weight:800;
+    line-height:1;
+}
+
+.brand-block .brand-logo.logo-fallback .brand-logo-fallback{
+    display:inline-flex;
+}
+
+.brand-block .brand-logo.logo-fallback img{
+    display:none;
+}
+
+.brand-block h1{
+    color:#301044;
+    font-size:22px;
+    font-weight:800;
+    line-height:1.2;
+    letter-spacing:-.4px;
+    margin:0;
+}
+
+.brand-block p{
+    color:var(--qb-muted);
+    font-size:13px;
+    line-height:1.5;
+    margin:6px 0 0;
+}
+
+/* =========================
+   CARDS
+   ========================= */
+
+.login-page .page-card.hrms-card{
+    background:#fff;
+    border:1px solid var(--qb-border);
+    border-radius:16px;
+    box-shadow:0 14px 36px rgba(50,18,71,.10);
+    padding:22px;
+    max-width:100%;
+    width:100%;
+    margin:0;
+    min-height:auto;
+}
+
+.login-page .for-login .page-card.hrms-card{
+    padding:22px;
+    min-height:auto;
+    border:1px solid var(--qb-border);
+    border-radius:16px;
+}
+
+/* =========================
+   FORM
+   ========================= */
+
+.login-page .form-group{
+    margin-bottom:14px;
+}
+
+.login-page .field-label{
+    display:block;
+    color:#301044;
+    font-size:13px;
+    font-weight:650;
+    margin-bottom:6px;
+}
+
+.input-container{
+    position:relative;
+}
+
+.login-page .for-login .page-card .page-card-body .input-container .form-control{
+    width:100%;
+    height:46px;
+    padding:0 66px 0 44px;
+    border:1px solid var(--qb-border);
+    border-radius:9px;
+    background:#fff;
+    color:#301044;
+    font-size:14px;
+    box-sizing:border-box;
+    transition:border-color .2s,box-shadow .2s,background .2s;
+    box-shadow:none;
+}
+
+.login-page .for-login .page-card .page-card-body .input-container .form-control:hover{
+    border-color:#D8CBE0;
+    background:#FBF8FC;
+}
+
+.login-page .for-login .page-card .page-card-body .input-container .form-control:focus{
+    border-color:var(--qb-magenta);
+    outline:none;
+    background:#fff;
+    box-shadow:0 0 0 3px rgba(200,73,154,.14);
+}
+
+.login-page .for-login .page-card .page-card-body .input-container .form-control::placeholder{
+    color:#9A8FA2;
+}
+
+.input-icon{
+    position:absolute;
+    top:50%;
+    left:15px;
+    z-index:2;
+    display:flex;
+    align-items:center;
+    color:var(--qb-muted);
+    transform:translateY(-50%);
+    pointer-events:none;
+}
+
+.input-icon svg{
+    width:17px;
+    height:17px;
+}
+
+.toggle-password{
+    position:absolute;
+    top:50%;
+    right:12px;
+    z-index:3;
+    border:0;
+    background:transparent;
+    padding:4px;
+    color:var(--qb-purple);
+    font-size:12px;
+    font-weight:650;
+    cursor:pointer;
+    transform:translateY(-50%);
+}
+
+.toggle-password:focus-visible{
+    outline:2px solid rgba(184,50,143,.35);
+    outline-offset:1px;
+    border-radius:5px;
+}
+
+/* Field errors (login.js toggles .invalid on .form-group) */
+
+.login-page .for-login .page-card .page-card-body .field-error{
+    display:none;
+    margin:5px 0 0;
+    color:#c62828;
+    font-size:12px;
+    line-height:1.35;
+}
+
+.login-page .for-login .page-card .page-card-body .form-group.invalid .field-error{
+    display:block;
+}
+
+.login-page .for-login .page-card .page-card-body .form-group.invalid .form-control{
+    border-color:#dc3545;
+    box-shadow:0 0 0 3px rgba(220,53,69,.10);
+}
+
+/* Error banner */
+
+.login-page .login-error-banner.es-alert{
+    margin:0 0 14px;
+}
+
+.login-page .login-error-banner.es-alert .es-alert__title{
+    font-size:13px;
+}
+
+/* =========================
+   SIGN IN BUTTON
+   ========================= */
+
+.login-page .page-card-actions{
+    margin-top:16px;
+}
+
+.login-page .btn-login{
+    width:100%;
+    height:46px;
+    padding:0 16px;
+    border:0!important;
+    border-radius:9px!important;
+    background:linear-gradient(135deg,#453D89 0%,#7b2d87 52%,#c33d91 100%)!important;
+    color:#fff!important;
+    font-size:14px!important;
+    font-weight:700!important;
+    box-shadow:0 8px 20px rgba(69,61,137,.22);
+    cursor:pointer;
+    transition:transform .2s,box-shadow .2s,opacity .2s;
+}
+
+.login-page .btn-login:hover{
+    transform:translateY(-1px);
+    box-shadow:0 11px 24px rgba(69,61,137,.27);
+}
+
+.login-page .btn-login:focus-visible{
+    outline:3px solid rgba(184,50,143,.30);
+    outline-offset:2px;
+}
+
+.login-page .btn-login[disabled]{
+    opacity:.72;
+    cursor:default;
+    transform:none;
+    box-shadow:0 8px 20px rgba(69,61,137,.16);
+}
+
+/* =========================
+   DEMO ACCOUNT SELECTORS
+   ========================= */
+
+.demo-account-section{
+    margin-top:18px;
+    padding:16px;
+    border:1px solid var(--qb-border);
+    border-radius:12px;
+    background:linear-gradient(135deg,#FBF9FD 0%,#fff 100%);
+}
+
+.quick-card-head{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    margin-bottom:12px;
+}
+
+.quick-card-title{
+    color:#301044;
+    font-size:14px;
+    font-weight:700;
+    line-height:1.35;
+}
+
+.quick-card-sub{
+    color:var(--qb-muted);
+    font-size:12px;
+    line-height:1.4;
+}
+
+.demo-account-feedback{
+    min-height:18px;
+    margin:10px 0 0;
+    color:#9b1c1c;
+    font-size:12px;
+    line-height:1.5;
+    text-align:center;
+}
+
+.demo-account-buttons{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+}
+
+.demo-account-btn{
+    min-width:0;
+    min-height:44px;
+    border:1px solid var(--qb-border);
+    border-radius:10px;
+    background:rgba(255,255,255,.9);
+    color:#301044;
+    font-size:13px;
+    font-weight:650;
+    cursor:pointer;
+    transition:transform .2s,background .2s,border-color .2s,box-shadow .2s;
+}
+
+.demo-account-btn:hover{
+    transform:translateY(-1px);
+    background:#fff;
+    border-color:#CFC0DA;
+    box-shadow:0 5px 14px rgba(50,18,71,.10);
+}
+
+.demo-account-btn[disabled]{
+    cursor:default;
+    opacity:.65;
+    transform:none;
+    box-shadow:none;
+}
+
+.demo-account-btn:focus-visible{
+    outline:3px solid rgba(184,50,143,.28);
+    outline-offset:1px;
+}
+
+/* =========================
+   NOSCRIPT
+   ========================= */
+
+.noscript-box{
+    text-align:center;
+    padding:20px;
+    color:var(--qb-muted);
+}
+
+.noscript-box h4{
+    color:#301044;
+    margin:0 0 8px;
+}
+
+/* =========================
+   RESPONSIVE / SHORT VIEWPORTS
+   ========================= */
+
+@media(max-width:575.98px){
+    .login-page{
+        padding:16px 12px;
+        align-items:center;
+    }
+
+    .login-page .for-login .page-card.hrms-card,
+    .login-page .page-card.hrms-card{
+        padding:18px 16px;
+        border-radius:14px;
+        min-height:auto;
+    }
+
+    .brand-block .brand-logo img{
+        height:48px;
+    }
+
+    .brand-block .brand-logo .brand-logo-fallback{
+        min-width:48px;
+        height:48px;
+        font-size:22px;
+    }
+
+    .brand-block h1{
+        font-size:20px;
+    }
+
+}
+
+@media(min-width:769px) and (max-height:740px){
+    .login-page{
+        padding:14px;
+    }
+
+    .login-stack{
+        gap:12px;
+    }
+
+    .brand-block .brand-logo{
+        padding:8px 18px;
+        margin-bottom:10px;
+    }
+
+    .brand-block .brand-logo img{
+        height:46px;
+    }
+
+    .brand-block .brand-logo .brand-logo-fallback{
+        min-width:46px;
+        height:46px;
+        font-size:22px;
+    }
+
+    .brand-block h1{
+        font-size:20px;
+    }
+
+    .brand-block p{
+        margin-top:4px;
+        font-size:12px;
+    }
+
+    .login-page .for-login .page-card.hrms-card{
+        padding:18px;
+    }
+
+    .login-page .form-group{
+        margin-bottom:11px;
+    }
+
+    .login-page .for-login .page-card .page-card-body .input-container .form-control{
+        height:42px;
+    }
+
+    .login-page .page-card-actions{
+        margin-top:12px;
+    }
+
+    .login-page .btn-login{
+        height:42px;
+    }
+
+}
+</style>
+
+{% endblock %}
+
+
+{% block page_content %}
+
+{# ===== PAGE BRANDING (read live from Website Settings) ===== #}
+{% set company_name = frappe.db.get_single_value("Website Settings", "app_name") %}
+{% set company_logo = frappe.db.get_single_value("Website Settings", "app_logo") %}
+{% set welcome_message = "Welcome! Sign in to access your HRMS workspace." %}
+{% set demo_users = get_hrms_demo_users() %}
+
+<div class="login-page">
+
+    <noscript>
+        <div class="noscript-box">
+            <h4>{{ _("Javascript is disabled on your browser") }}</h4>
+            <p>{{ _("You need to enable JavaScript for your app to work.") }}</p>
+        </div>
+    </noscript>
+
+    <div class="login-stack">
+
+        <div class="brand-block">
+
+            <a href="/" aria-label="{{ _('Go to homepage') }}"
+                class="brand-logo{% if not company_logo %} logo-fallback{% endif %}">
+                {% if company_logo %}
+                <img src="{{ company_logo }}" alt="{{ company_name or _('Website') }} logo"
+                    onerror="this.closest('.brand-logo').classList.add('logo-fallback'); this.remove();">
+                {% endif %}
+                <span class="brand-logo-fallback" aria-hidden="true">
+                    {%- if company_name -%}
+                    {{ company_name[0] | upper }}
+                    {%- else -%}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" width="26" height="26" aria-hidden="true">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="10" cy="7" r="4"></circle>
+                        <path d="M20 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    {%- endif -%}
+                </span>
+            </a>
+
+            <h1>{% if company_name %}{{ _("Login to {0}").format(company_name) }}{% else %}{{ _("Login") }}{% endif %}</h1>
+
+            <p>{{ _(welcome_message) }}</p>
+
+        </div>
+
+        <section class="for-login">
+
+            <div class="login-content page-card hrms-card">
+
+                <form class="form-signin form-login" role="form" novalidate>
+
+                    <div class="page-card-body">
+
+                        <div class="login-error-banner es-alert hidden" role="alert" aria-live="polite">
+                            <span class="es-alert__title"></span>
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="field-label" for="login_email">
+                                {{ _("Email or Username") }}
+                            </label>
+
+                            <div class="email-field input-container">
+
+                                <span class="input-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        aria-hidden="true">
+                                        <path d="M20 21a8 8 0 0 0-16 0"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                </span>
+
+                                <input type="text" id="login_email" class="form-control"
+                                    placeholder="{{ _('Enter your email or username') }}"
+                                    required autofocus autocomplete="username">
+
+                            </div>
+
+                            <p class="field-error"></p>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="field-label" for="login_password">
+                                {{ _("Password") }}
+                            </label>
+
+                            <div class="password-field input-container">
+
+                                <span class="input-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        aria-hidden="true">
+                                        <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </span>
+
+                                <input type="password" id="login_password" class="form-control"
+                                    placeholder="{{ _('Enter your password') }}"
+                                    autocomplete="current-password" required>
+
+                                <button type="button" class="toggle-password" toggle="#login_password"
+                                    aria-label="{{ _('Show password') }}">
+                                    {{ _("Show") }}
+                                </button>
+
+                            </div>
+
+                            <p class="field-error"></p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="page-card-actions">
+
+                        <button class="es-button btn-login" data-variant="solid" type="submit">
+                            {{ _("Sign in") }}
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+        <section class="demo-account-section" aria-label="{{ _('Demo accounts') }}">
+            <div class="quick-card-head">
+                <span class="quick-card-title">{{ _("Demo Quick Login") }}</span>
+                <span class="quick-card-sub">{{ _("Select a role to sign in instantly") }}</span>
+            </div>
+            <div class="demo-account-buttons">
+                <button type="button" class="demo-account-btn" data-demo-role="admin"
+                    data-username="{{ demo_users.get('admin', '') | e }}">
+                    {{ _("Admin") }}
+                </button>
+                <button type="button" class="demo-account-btn" data-demo-role="employee"
+                    data-username="{{ demo_users.get('employee', '') | e }}">
+                    {{ _("Employee") }}
+                </button>
+                <button type="button" class="demo-account-btn" data-demo-role="hr"
+                    data-username="{{ demo_users.get('hr', '') | e }}">
+                    {{ _("HR") }}
+                </button>
+            </div>
+            <p class="demo-account-feedback" role="status" aria-live="polite"></p>
+        </section>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+
+<script>
+{% include "templates/includes/login/login.js" %}
+</script>
+
+<script>
+(function () {
+    "use strict";
+
+    var defaultLoginSuccessHandler = login.login_handlers[200];
+    login.login_handlers[200] = function (data) {
+        if (data && (data.message === "Logged In" || data.message === "No App")) {
+            login.set_status({{ _("Success") | tojson }}, "green");
+            document.body.innerHTML = `{% include "templates/includes/splash_screen.html" %}`;
+            var redirectTo = frappe.utils.sanitise_redirect(
+                frappe.utils.get_url_arg("redirect-to") || data.home_page
+            );
+            window.location.replace(redirectTo || "/desk");
+            return;
+        }
+
+        return defaultLoginSuccessHandler(data);
+    };
+
+    var busy = false;
+    var safetyTimer = null;
+
+    function setBusy(state) {
+        busy = state;
+        var buttons = document.querySelectorAll(".btn-login, .demo-account-btn");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = state;
+            if (!state) {
+                buttons[i].classList.remove("is-loading");
+                buttons[i].removeAttribute("aria-busy");
+            }
+        }
+    }
+
+    function markBusy() {
+        if (busy) {
+            return;
+        }
+        setBusy(true);
+        $(document).one("ajaxStop", function () {
+            setBusy(false);
+        });
+        safetyTimer = setTimeout(function () {
+            setBusy(false);
+        }, 20000);
+    }
+
+    $("form.form-login").on("submit.hrms_guard", function (event) {
+        var usr = ($("#login_email").val() || "").trim();
+        var pwd = $("#login_password").val() || "";
+
+        if (!usr || !pwd) {
+            return;
+        }
+
+        if (busy) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            return false;
+        }
+
+        markBusy();
+    });
+
+    var demoAccountButtons = document.querySelectorAll(".demo-account-btn");
+    var demoAccountFeedback = document.querySelector(".demo-account-feedback");
+
+    function getDemoLoginError(xhr) {
+        var response = xhr && xhr.responseJSON;
+        var fallback = "Demo sign-in failed. Check the account credentials and permissions, then try again.";
+
+        if (!response) {
+            return fallback;
+        }
+
+        if (response._error_message) {
+            return response._error_message;
+        }
+
+        if (response._server_messages) {
+            try {
+                var messages = JSON.parse(response._server_messages);
+                var firstMessage = messages[0];
+                if (typeof firstMessage === "string") {
+                    var parsedMessage = JSON.parse(firstMessage);
+                    return parsedMessage.message || fallback;
+                }
+                if (firstMessage && firstMessage.message) {
+                    return firstMessage.message;
+                }
+            } catch (error) {
+                return fallback;
+            }
+        }
+
+        return fallback;
+    }
+
+    for (var i = 0; i < demoAccountButtons.length; i++) {
+        demoAccountButtons[i].addEventListener("click", function () {
+            var role = this.getAttribute("data-demo-role");
+            var username = (this.getAttribute("data-username") || "").trim();
+
+            if (!username) {
+                demoAccountFeedback.textContent =
+                    "The " + role + " demo account is not configured in hrms.local site_config.json.";
+                return;
+            }
+
+            if (role === "employee" && username.toLowerCase() === "administrator") {
+                demoAccountFeedback.textContent =
+                    "Configure a separate Employee account; Administrator has full site access.";
+                return;
+            }
+
+            if (busy) {
+                return;
+            }
+
+            demoAccountFeedback.textContent = "Signing in to the local demo…";
+            markBusy();
+            try {
+                login.call(
+                    { role: role },
+                    null,
+                    "/api/method/hrms_demo_app.utils.quick_demo_login"
+                ).fail(function (xhr) {
+                    setBusy(false);
+                    demoAccountFeedback.textContent = getDemoLoginError(xhr);
+                });
+            } catch (error) {
+                setBusy(false);
+                demoAccountFeedback.textContent = "Could not start demo sign-in. Please use the standard login form.";
+            }
+        });
+    }
+
+    $(".toggle-password").on("click", function () {
+        var self = this;
+        setTimeout(function () {
+            var input = $(self).attr("toggle");
+            var $input = $(input);
+            var hidden = $input.attr("type") === "password";
+            $(self).text(hidden ? "Show" : "Hide");
+            $(self).attr("aria-label", hidden ? "Show password" : "Hide password");
+        }, 0);
+    });
+})();
+</script>
+
+{% endblock %}
+
+
+{% block sidebar %}
+{% endblock %}
