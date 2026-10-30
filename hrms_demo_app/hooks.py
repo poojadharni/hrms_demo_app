@@ -57,7 +57,7 @@ app_license = "mit"
 
 # application home page (will override Website Settings)
 home_page = "index"
-
+website_path_resolver = "hrms_demo_app.website.resolve_path"
 # website user home page
 get_website_user_home_page = "hrms_demo_app.website.get_website_user_home_page"
 
